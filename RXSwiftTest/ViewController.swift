@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 struct Course {
     let name: String
@@ -19,10 +20,10 @@ struct Course {
 
 struct CourseListViewModel {
     let data = Observable.just([
-        Course(name: "test1"),
-        Course(name: "test2"),
-        Course(name: "test3"),
-        Course(name: "test4"),
+        Course(name: "ObservableViewController"),
+        Course(name: "ObservableViewController"),
+        Course(name: "ObservableViewController"),
+        Course(name: "ObservableViewController"),
         ])
 }
 
@@ -48,8 +49,15 @@ class ViewController: UIViewController {
         
         tableView.rx.modelSelected(Course.self).subscribe(onNext: { course in
             print("你选中的信息\(course.name)")
+            
+            let clz = NSClassFromString("RXSwiftTest." + course.name) as! UIViewController.Type
+            let viewController = clz.init()
+            self.navigationController?.pushViewController(viewController, animated: true)
+            
         }).disposed(by: disposeBag)
-        
+     
+//        let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String,Course>>()
+
     }
 
     override func didReceiveMemoryWarning() {
