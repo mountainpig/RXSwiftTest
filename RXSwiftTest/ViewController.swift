@@ -61,7 +61,7 @@ class ViewController: UIViewController,UITableViewDelegate {
         let items = Observable.just([
             SectionModel(model: "First section", items: [
                 Course(name: "ObservableViewController"),
-                Course(name: "ObservableViewController"),
+                Course(name: "LoginViewController"),
                 Course(name: "ObservableViewController")
                 ]),
             SectionModel(model: "Second section", items: [

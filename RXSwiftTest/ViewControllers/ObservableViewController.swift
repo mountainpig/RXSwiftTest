@@ -11,6 +11,8 @@ import RxSwift
 
 class ObservableViewController: UIViewController {
 
+    let disposeBag = DisposeBag() //负责销毁
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -30,8 +32,23 @@ class ObservableViewController: UIViewController {
 */
         textField.rx.text.orEmpty.asObservable().map { (str) -> Bool in
             return str.count >= 3
-        }.bind(to: alertLabel.rx.isHidden)
+        }.bind(to: alertLabel.rx.isHidden).disposed(by: disposeBag)
         
+        
+        let testBtn = UIButton.init(frame: CGRect(x: 210, y: 84, width: 60, height: 40))
+        testBtn.backgroundColor = UIColor.red
+        self.view.addSubview(testBtn)
+        testBtn.rx.tap.asObservable().bind {[weak self] in
+            self?.showMessage("按钮被点击")
+        }.disposed(by: disposeBag)
+
+    }
+    
+    func showMessage(_ text: String) {
+        let alertController = UIAlertController(title: text, message: nil, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "确定", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
